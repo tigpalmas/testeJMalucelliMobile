@@ -1,0 +1,9 @@
+export const  facebookBlue =  '#3b5998'
+export const  lightPurple =   '#cdc5ff'
+export const  purpleTitle =   '#7966FF'
+export const  darkPurple =   '#3227ff'
+export const  green =   '#33CBCC'
+export const  checkGreen =   '#9FC351'
+export const    grey= "#eae5e5"
+export const    titleGrey= "#96a5ac"
+export const    darkGrey= "#454A58"
