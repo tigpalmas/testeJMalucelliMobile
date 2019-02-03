@@ -7,13 +7,62 @@ import {TextInputMask} from 'react-native-masked-text'
 
 
 import {LinearGradient} from 'expo';
+import {cnpjServer} from "../common/constants/index";
 
 
 class SearchCNPJScreen extends React.Component {
 
+    constructor(props){
+        super(props);
+        this.state  = ({
+            cnpj: '',
+            messageErro: '',
+            error: false
+        })
+    }
+
+    onInputChangeText = (value)=>{
+        this.setState({cnpj: value, messageErro:'', error: false})
+
+    }
+
+    submitCNPJ = () =>{
+        let numb = this.state.cnpj.split('.').join("")
+        numb = numb.split('-').join("")
+        numb = numb.split('/').join("")
+        if(numb.length<14){
+            this.setState({messageErro: 'Cnpj está Incompleto', error: true})
+        }
+        else if (this.state.cnpj != cnpjServer) {
+            this.setState({messageErro: `CNPJ deve ser igual há:  ${cnpjServer}`, error: true})
+        } else {
+            let numb = this.state.cnpj.split('.').join("")
+            numb = numb.split('-').join("")
+            console.log(numb)
+
+            this.props.fetch_cnpj(numb)
+        }
+    }
+
+
+    checkValidate = () => {
+        const {cnpj} = this.state
+        if (cnpj.length>17) {
+            return (
+                < Icon
+                    size={24}
+                    name={"check-circle"}
+                    style={{color: checkGreen, marginRight: 5}}
+                />
+            )
+        }
+
+    }
 
     render() {
         const {labelStyle, inputWrapper, maskStyle} = styles;
+        const {cnpj} = this.state;
+
         return (
             <View style={styles.container}>
                 <LinearGradient
@@ -58,32 +107,32 @@ class SearchCNPJScreen extends React.Component {
                         <View style={inputWrapper}>
                             <TextInputMask
                                 style={maskStyle}
-                                value={null}
+                                value={cnpj}
                                 placeholder={'Digite o CNPJ'}
                                 underlineColorAndroid='transparent'
-                                onChangeText={null}
+                                onChangeText={value => {
 
+                                    this.onInputChangeText(value)
+                                }}
                                 refInput={(ref) => this.myDateText = ref}
                                 type={'datetime'}
                                 options={{
                                     format: '99.999.999/9999-99'
                                 }}
 
+
                             />
+
                         </View>
                     </View>
 
-                    < Icon
-                        size={24}
-                        name={"check-circle"}
-                        style={{color: checkGreen, marginRight: 5}}
-                    />
+                    {this.checkValidate()}
                 </View>
 
                 <View style={{position:'absolute', bottom: 0, right: 0, left: 0, padding: 20}}>
                 <Button
                     color={green}
-                    onPress={()=> this.props.navigation.navigate('searchCNPJ')}
+                    onPress={()=> this.submitCNPJ()}
                     label={"OK"}
                     iconName={"arrow-right"}
                     textColor={'white'}/>
